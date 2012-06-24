@@ -6,8 +6,9 @@ gem 'pg', '0.12.2'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-group :development, :test do
+group :development do
 	gem 'rspec-rails', '2.10.0'
+	gem 'guard-rspec', '0.5.5'
 end
 
 # Gems used only for assets and not required
@@ -25,7 +26,12 @@ end
 gem 'jquery-rails', '2.0.0'
 
 group :test do
+	gem 'rspec-rails', '2.10.0'
 	gem 'capybara', '1.1.2'
+	gem 'rb-fsevent', '0.9.1', :require => false
+  	gem 'growl', '1.0.3'
+  	gem 'guard-spork', '0.3.2'
+  	gem 'spork', '0.9.0'
 end
 
 # To use ActiveModel has_secure_password
