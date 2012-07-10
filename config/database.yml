@@ -5,7 +5,7 @@ development:
   database: sample_app_development
   username: 
   password:
-  host:
+  host: localhost
   pool: 5
 
 test:
