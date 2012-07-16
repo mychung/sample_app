@@ -8,7 +8,7 @@ development:
   host: localhost
   pool: 5
 
-test:
+test: &test
   adapter: postgresql
   encoding: unicode
   database: sample_app_test
@@ -23,3 +23,6 @@ production:
   pool: 5
   username: 
   password:
+
+cucumber:
+  <<: *test

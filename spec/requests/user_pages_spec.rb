@@ -15,7 +15,7 @@ describe "UserPages" do
   describe "profile page" do
 
   	#code to make a user variable
-	let(:user) { FactoryGirl.create(:user) }
+	  let(:user) { FactoryGirl.create(:user) }
   	before(:each) { visit user_path(user) }
 
   	it { should have_selector('h1', text: user.name) }
@@ -58,6 +58,7 @@ describe "UserPages" do
 
       		it { should have_selector('title', text: user.name) }
       		it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+          it { should have_link('Sign out') }
       	end
   	end
 
