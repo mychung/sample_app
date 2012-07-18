@@ -2,24 +2,33 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
-	def show
+	
+  def show
 		@user = User.find(params[:id])
 	end
 
 	def new
-		@user = User.new
+	  if signed_in?      
+      redirect_to root_path  
+    else
+    	@user = User.new
+    end
 	end
 
 	def create
-		@user = User.new(params[:user])
-		if @user.save
-			# Handle a sucessful save.
-      sign_in @user
-			flash[:success] = "Welcome to the Sample App!"
-			redirect_to @user
-		else
-			render 'new'
-		end
+    if signed_in?
+      redirect_to root_path
+    else
+  		@user = User.new(params[:user])
+  		if @user.save
+  			# Handle a sucessful save.
+        sign_in @user
+  			flash[:success] = "Welcome to the Sample App!"
+  			redirect_to @user
+  		else
+  			render 'new'
+  		end
+    end  
 	end
 
   def edit 
@@ -42,8 +51,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
+    if current_user?(User.find(params[:id])) && current_user.admin?
+      flash[:error] = "An admin can't destroy yourself"
+    else 
+      User.find(params[:id]).destroy
+      flash[:success] = "User destroyed."
+    end
     redirect_to users_path
   end
 

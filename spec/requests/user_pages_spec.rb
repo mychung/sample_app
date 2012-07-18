@@ -144,5 +144,6 @@ describe "UserPages" do
       specify { user.reload.email.should == new_email }
     end
   end
+
 end
 
