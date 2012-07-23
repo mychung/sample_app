@@ -17,9 +17,7 @@
 			<%= render 'layouts/footer' %>
 			<%= debug(params) if Rails.env.development? %>
 			<%= debug(request.GET) if Rails.env.development? %>
-			<%= debug(request.POST) if Rails.env.development? %>
-			<%= debug(request.original_fullpath) if Rails.env.development? %>
-			<%= debug(request.body) if Rails.env.development? %>
+			
 		</div>
 	</body>
 </html>

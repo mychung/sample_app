@@ -61,10 +61,24 @@ describe "UserPages" do
 
   	#code to make a user variable
 	  let(:user) { FactoryGirl.create(:user) }
+    #create a bunch of microposts
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "bar") }
+    
   	before(:each) { visit user_path(user) }
 
   	it { should have_selector('h1', text: user.name) }
   	it { should have_selector('title', text: user.name) }
+
+    describe "microposts" do
+      #verify that the microposts show up
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+
+      #verify the number appears on top
+      it { should have_content(user.microposts.count) }
+        #verify pagination.
+    end
   end
 
   describe "signup" do
