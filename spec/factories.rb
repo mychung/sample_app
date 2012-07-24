@@ -11,7 +11,8 @@ FactoryGirl.define do
 	end	
 
 	factory :micropost do
-		content "Lorem Ipsum"
+		#content = Faker::Lorem.sentence(5) doesn't work in rspec environment
+		sequence(:content) { |n| "Lorem Ipsum #{n}" }
 		user
 	end
 	

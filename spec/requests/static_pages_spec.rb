@@ -21,17 +21,51 @@ describe "StaticPages" do
 		describe "for signed-in users" do
 			let(:user) { FactoryGirl.create(:user) }
 			before do
-				FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
-        		FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
         		sign_in user
         		visit root_path
         	end
 
-        	it "should render the user's feed" do
-        		user.feed.each do |item|
-        			page.should have_selector("li##{item.id}", text: item.content)
-        		end
-        	end
+			describe "sidebar with no microposts" do
+        		it { should have_content(user.microposts.count) }
+        		it { should have_content("micropost") }
+            end
+
+			describe "sidebar with 1 micropost" do
+
+				let(:user) { FactoryGirl.create(:user) }
+				before do 
+					FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+					sign_in user
+        			visit root_path
+    			end
+
+        		it { should have_content(user.microposts.count) }
+        		it { should have_content("1 micropost") }
+            end
+
+        	describe "with 2 or more microposts" do
+
+        		let(:user) { FactoryGirl.create(:user) }
+	        	before do
+	        		sign_in user
+		        	FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+	        		FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+	        		visit root_path
+	        	end
+
+				describe "sidebar should pluralize properly" do
+	        		it { should have_content(user.microposts.count) }
+	        		it { should have_content("2 microposts") }
+	            end
+
+	        	it "should render the user's feed" do
+	        		FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+	        		visit root_path
+	        		user.feed.each do |item|
+	        			page.should have_selector("li##{item.id}", text: item.content)
+	        		end
+	        	end
+	        end
         end
 	end
 

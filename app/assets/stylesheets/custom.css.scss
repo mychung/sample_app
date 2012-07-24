@@ -211,3 +211,28 @@ aside {
     margin-bottom: 5px;
   }
 }
+
+/* miniCounter js css */
+.counter{
+    right: 20px;
+    top: 167px;
+    font-size: 13px;
+  span {
+    display: inline;
+  }
+  .row {
+    top: 45px;
+    .error {
+      font-color: red;
+    }
+  }
+}
+
+input.error, textarea.error {
+    color: #6F6F6F;
+    border-color: #D95D5B;
+    background-color: #f8e6e6;
+}
+.error {
+    color: red;
+}

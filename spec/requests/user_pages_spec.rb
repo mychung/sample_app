@@ -61,9 +61,10 @@ describe "UserPages" do
 
   	#code to make a user variable
 	  let(:user) { FactoryGirl.create(:user) }
+
     #create a bunch of microposts
-    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "foo") }
-    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "bar") }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "foo", created_at: 1.second.ago) }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "bar", created_at: 1.second.ago) }
     
   	before(:each) { visit user_path(user) }
 
@@ -73,11 +74,52 @@ describe "UserPages" do
     describe "microposts" do
       #verify that the microposts show up
       it { should have_content(m1.content) }
+ #      it { should have_content(m1.content) }
       it { should have_content(m2.content) }
 
       #verify the number appears on top
       it { should have_content(user.microposts.count) }
-        #verify pagination.
+        
+      #verify pagination.
+      describe "pagination" do
+        before(:all) {
+          50.times { FactoryGirl.create(:micropost, user: user, created_at: 1.hour.ago) } 
+        }
+        it { should have_selector('div.pagination') }
+
+        it "should list each micropost" do
+          user.microposts.paginate(page: 1).each do |micropost|
+            page.should have_selector('li', text: micropost.content)
+          end
+        end
+      end
+
+      #verify delete links
+      describe "signed in as current user" do
+        let(:user) { FactoryGirl.create(:user) }
+
+        #create a bunch of microposts
+        let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "foo", created_at: 1.second.ago) }
+        let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "bar", created_at: 1.second.ago) }
+
+        before(:each) {
+          sign_in user
+          visit user_path(user)
+        }
+
+        it { should have_link('delete', href: micropost_path(user.microposts.first)) }      
+
+        describe "should not delete others microposts" do
+          let(:diff_user) { FactoryGirl.create(:user) }
+          #create microposts for the other user.
+          let!(:m3) { FactoryGirl.create(:micropost, user: diff_user, content: "foo", created_at: 1.second.ago) }
+          let!(:m4) { FactoryGirl.create(:micropost, user: diff_user, content: "bar", created_at: 1.second.ago) }
+
+          before { visit user_path(diff_user) }
+          
+          it { should_not have_link('delete', href: micropost_path(diff_user.microposts.first)) }
+        end
+      end          
     end
   end
 

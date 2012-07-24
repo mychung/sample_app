@@ -1,7 +1,18 @@
 <%= form_for (@micropost) do |f| %>
 	<%= render 'shared/error_messages', object: f.object %>
-	<div class="field">
+	<div id="micropost_content" class="field">
 		<%= f.text_area :content, placeholder: "Compose new micropost..." %>
 	</div>
+	<script>
+		$(function() {
+			$('#micropost_content textarea').miniCount({
+					max :  <%= MAX_MICROPOST_LENGTH %>,
+					unit: 'character',
+					text: 'characters left.',
+					invalidText: 'characters',
+					countdown: true
+			});
+		});
+	</script>
 	<%= f.submit "Post", class: "btn btn-large btn-primary" %>
 <% end %>
