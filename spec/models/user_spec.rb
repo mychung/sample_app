@@ -173,13 +173,23 @@ describe User do
 			end
 		end
 
-#		it "should destroy associated relationships" do
-#			relationships = @user.relationships
-#			@user.destroy
-#			relationships.each do |relationship|
-#				Relationship.find_by_id(relationship.id).should be_nil
-#			end
-#		end
+		# this test doesn't seem to work.
+		it "should destroy associated relationships" do
+			relationships = @user.relationships
+			@user.destroy
+			relationships.each do |relationship|
+				Relationship.find_by_id(relationship.id).should be_nil
+			end
+		end
+
+		# this test doesn't seem to work.
+		it "should destroy associated reverse_relationships" do
+			reverse_relationships = @user.reverse_relationships
+			@user.destroy
+			reverse_relationships.each do |reverse_relationship|
+				Relationship.find_by_id(reverse_relationship.id).should be_nil
+			end
+		end
 
 		describe "status" do
 			let(:unfollowed_post) do
